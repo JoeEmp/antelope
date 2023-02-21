@@ -10,6 +10,7 @@
 ```bash
 mkdir log
 mkdir report
+mkdir suite
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
@@ -20,6 +21,7 @@ win 用户
 ```bat
 mkdir log
 mkdir report
+mkdir suite
 python -m venv venv
 venv\Scripts\activate.bat
 pip install -r requirements.txt
@@ -41,7 +43,7 @@ python3 cli.py gt test_case/hello_world
 
 # 运行
 
-python3 runner tests -e demo
+python3 runner test_case/hello_world -e demo
 
 ```
 
