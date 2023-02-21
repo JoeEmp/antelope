@@ -1,0 +1,18 @@
+# 服务器代码见
+# https://github.com/JoeEmp/python_case/blob/master/frame/Locust/server.py
+request:
+  method: "POST"
+  host: "http://127.0.0.1:10086"
+  url: "/login"
+  headers:
+    User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+  body: { "username": "lloydjamie@hotmail.com", "password": "65837832" }
+  response_value_name: response
+
+case:
+  # 请求步骤
+  - request: request
+  - assertEqual:
+      first: "login success"
+      second: "{response}.msg"
+      msg: "接口返回错误，用户登录失败"

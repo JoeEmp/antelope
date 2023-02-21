@@ -1,0 +1,4 @@
+value:
+  - title: "引用未定义变量,执行故障"
+    args: {}
+    module_path: abort

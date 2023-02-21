@@ -1,0 +1,4 @@
+value:
+  - args: '{"case_type":"str","phone":[135,189],"info":{"money":0,"sub_obj":{"thr_obj":{"pre":"is sec obj"},"other":"another"},"is_del":false,"for_nothing":null,"accounts":[{"username":"joe"},{"username":"melody"}]}}'
+    title: "用例模版变量替换"
+    module_path: pass

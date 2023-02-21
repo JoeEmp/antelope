@@ -1,0 +1,20 @@
+is_api_case: False
+
+title: 兼容制表符
+module_path: pass
+
+case:
+  - echo: "应该测试通过"
+  # 提取token
+  - set_step:
+      name: token
+      value: |
+        SELECT
+        	* 
+        FROM
+        	aiot_t_device_setting 
+        WHERE
+        	deviceKey IN (
+        		'MP_L_A_211021_000033',
+        	'MP_L_A_211125_000382' 
+        	)

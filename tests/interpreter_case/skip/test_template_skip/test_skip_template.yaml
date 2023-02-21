@@ -1,0 +1,21 @@
+is_api_case: False
+
+is_skip: True
+
+module_path: skip
+
+case:
+  - echo: 测试模板级别跳过用例
+  # 提取token
+  - set_step:
+      name: token
+      value: |
+        SELECT
+        	* 
+        FROM
+        	aiot_t_device_setting 
+        WHERE
+        	deviceKey IN (
+        		'MP_L_A_211021_000033',
+        	'MP_L_A_211125_000382' 
+        	)

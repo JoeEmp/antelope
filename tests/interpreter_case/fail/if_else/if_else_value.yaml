@@ -1,0 +1,8 @@
+value:
+  - args: '{"name":"Joe","result":"Melody"}'
+    title: 测试嵌套分支,断言失败为正常
+    module_path: fail
+
+  - args: '{"name":"kaka","result":"show error"}'
+    title: 测试else分支,断言失败为正常
+    module_path: fail

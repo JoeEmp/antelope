@@ -1,0 +1,13 @@
+case:
+  - if_step:
+      - judge: "{into_branch} == 1"
+      - request: request
+  - else_step:
+      - echo: hello
+
+request:
+  host: "https://ug.baidu.com"
+  method: "POST"
+  response_value_name: response
+  url: "mcp/pc/pcsearch"
+  body: { "invoke_info": { "pos_1": [{}], "pos_2": [{}], "pos_3": [{}] } }

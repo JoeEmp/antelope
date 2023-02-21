@@ -1,0 +1,11 @@
+value:
+  - title: 测试类型
+    args:
+      {
+        "a_int": 123,
+        "b_bool": true,
+        "c_str": "4565",
+        "d_json": { "name": "meloay" },
+        "e_list": ["123", 456],
+      }
+    module_path: pass

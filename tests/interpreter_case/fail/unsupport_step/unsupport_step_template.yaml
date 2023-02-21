@@ -1,0 +1,4 @@
+is_api_case: false
+
+case:
+  - unsupport: abc

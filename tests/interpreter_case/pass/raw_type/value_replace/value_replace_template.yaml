@@ -1,0 +1,11 @@
+is_api_case: False
+
+case:
+  - set_step:
+      name: "list_value"
+      value: [1, 2, 3]
+
+  - assertValueType:
+      value: "${list_value}.1"
+      type: int
+      msg: "2 is int"

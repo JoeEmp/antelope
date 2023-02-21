@@ -1,0 +1,24 @@
+request:
+  method: "POST"
+  host: "https://test.dianyoumi.com"
+  url: "/api/admin/base/open/login"
+  headers: '{"tenantId":"1004200"}'
+  body: '{"phone":"{phone}","password":"123456","captchaId":"cd3be030-960c-11ec-87db-1f123c911c33","verifyCode":"0630","tenantId":"1004200"}'
+  response_value_name: response
+
+case:
+  # 请求步骤
+  - request: request
+  # 提取token
+  - set_step:
+      name: token
+      value: "{response}.data.token"
+  # 提取返回的code值
+  - set_step:
+      name: code
+      value: "{response}.code"
+  # 断言是否登录失败
+  - assertEqual:
+      - '1000'
+      - "{code}"
+      - 登录失败

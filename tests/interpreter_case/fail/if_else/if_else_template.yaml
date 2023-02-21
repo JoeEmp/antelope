@@ -1,0 +1,26 @@
+is_api_case: False
+
+case:
+      - if_step:
+              - judge: "'{name}' == 'Joe' and len('{name}') == 3"
+              - set_step:
+                      name: name
+                      value: Melody
+              - if_step:
+                      - judge: "'{name}' == 'Melody' and len('{name}') == 6"
+                      - set_step:
+                              name: name
+                              value: miemie
+      - elif_step:
+              - judge: "'{name}' == 'Ho' and len('{name}') == 2"
+              - set_step:
+                      name: name
+                      value: Yang
+      - else_step:
+              - set_step:
+                      name: name
+                      value: error
+      - assertEqual:
+              - "{name}"
+              - "{result}"
+              - "初始化名字错误"

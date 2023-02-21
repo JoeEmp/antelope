@@ -1,0 +1,5 @@
+demo: {}
+
+value:
+  - title: "冒烟测试"
+    args: {}

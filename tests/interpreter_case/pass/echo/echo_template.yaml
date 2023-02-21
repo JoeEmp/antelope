@@ -1,0 +1,8 @@
+is_api_case: False
+
+case:
+    - echo: "life is short i use python"
+    - set_step:
+          name: new
+          value: "paix is comming"
+    - echo: "{new}"

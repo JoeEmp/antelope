@@ -1,0 +1,31 @@
+is_api_case: false
+
+case:
+  - func:
+      name: '{func_path}'
+      args:
+        - 123
+        - 456
+      kwargs:
+        name: Joe
+      func_result: name
+  - func:
+      name: '{func_path}'
+      args:
+        - 123
+        - 456
+        - Joe
+      func_result: name
+  - func:
+      name: '{func_path}'
+      kwargs:
+        first: 123
+        second: 456
+        name: Joe
+      func_result: name
+  - func:
+      name: '{func_path}'
+      kwargs:
+        first: 123
+        second: 456
+        name: Joe

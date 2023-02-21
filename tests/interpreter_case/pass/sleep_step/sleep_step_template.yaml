@@ -1,0 +1,9 @@
+is_api_case: False
+
+module_path: pass
+
+case:
+  - sleep: 1
+  - echo: 'after 1.0 sec'
+  - sleep: 2.2
+  - echo: 'after 2.2 sec'

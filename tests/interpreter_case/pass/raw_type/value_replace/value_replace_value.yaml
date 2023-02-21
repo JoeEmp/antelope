@@ -1,0 +1,4 @@
+value:
+  - title: "变量替换的冒烟测试"
+    args: {}
+    module_path: pass

@@ -1,0 +1,8 @@
+test:
+  admin: admin
+  device-sys: "13532023754"
+
+value:
+  - args: { "phone": "unexists" }
+    module_path: "fail"
+    title: "不存在用户登录失败"

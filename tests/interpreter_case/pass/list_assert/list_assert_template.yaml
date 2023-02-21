@@ -1,0 +1,8 @@
+is_api_case: false
+
+case:
+  - echo: "应该测试通过"
+  - assertListEqual:
+      - [1, 2]
+      - [1, 2]
+      - 列表a != 列表b

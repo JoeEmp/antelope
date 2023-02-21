@@ -1,0 +1,4 @@
+value:
+  - title: ”else分支不做参数化处理"
+    args: { "word": "hoing" }
+    module_path: pass

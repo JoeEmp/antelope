@@ -1,0 +1,9 @@
+test:
+  admin: admin
+  device-sys: "13532023754"
+
+value:
+  - args: '{"phone":"abc"}'
+    is_skip: true
+    title: 测试跳过用例
+    module_path: skip

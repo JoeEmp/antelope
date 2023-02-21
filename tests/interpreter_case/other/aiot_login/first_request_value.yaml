@@ -1,0 +1,9 @@
+test:
+  admin: admin
+  device-sys: "13532023754"
+
+value:
+  - args: '{"phone":"unexists"}'
+    # 默认优先级为99，100不执行
+    level: 100
+    title: 优先级为100,会直接过滤掉不会执行
