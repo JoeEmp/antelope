@@ -127,3 +127,19 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+venv
+.DS_Store
+.idea
+.vscode
+temp
+report
+*.xlsx
+*case
+nohup.out
+function
+environment.properties
+demo*
+*error_suite.yaml
+*coverage*
+suite

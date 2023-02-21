@@ -1,0 +1,17 @@
+pytest
+pytest-rerunfailures
+records
+pyyaml
+jsonschema
+genson
+allure-pytest
+fire
+pymysql
+psycopg2-binary
+jsonpath
+requests
+coverage
+SQLAlchemy==1.3.22
+oss2
+colorama
+xlrd

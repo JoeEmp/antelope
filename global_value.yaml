@@ -1,0 +1,10 @@
+demo:
+  db:
+    mysql:
+      {
+        "host": "127.0.0.1",
+        "username": "root",
+        "pwd": "123456",
+        "port": 3306,
+        "type": "mysql",
+      }

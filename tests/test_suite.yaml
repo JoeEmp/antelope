@@ -1,0 +1,8 @@
+[
+  # 目录
+  "tests/interpreter_case/pass/echo",
+  # 文件
+  "tests/interpreter_case/pass/test_tab_char/test_tab_template.yaml",
+  # py 用例
+  "tests/interpreter_case/pass/a_test.py",
+]
