@@ -113,7 +113,9 @@ def get_suite_case(suite_file):
 
 def get_case_file_case(case_file):
     yaml_case, py_case = [], []
-    if os.path.isfile(case_file):
+    if not os.path.exists(case_file):
+        auto_logger.warning('文件(夹) %s 不存在'%case_file)
+    elif os.path.isfile(case_file):
         if case_file.endswith('.py'):
             py_case.append(case_file)
         else:

@@ -2,7 +2,6 @@ from com.value import Value
 from com.error import GlobalValueException, AutoTestException
 from com.log import auto_logger
 from com.db import DB_TYPE
-from com.xw_oss import XwOss
 
 
 class GlobalValue(Value):
@@ -20,7 +19,6 @@ class GlobalValue(Value):
             self._value = {}
         self._value = self.get_env_value(self._value, env)
         self._value['_db'] = self.gen_db()
-        self._value['_oss'] = self.gen_oss()
         self.env = env
 
     def get_env_value(self, value, env):
@@ -41,12 +39,6 @@ class GlobalValue(Value):
             except KeyError as e:
                 raise AutoTestException('%s类型的db没有具体的实现,请联系开发者' % db_type)
         return db_links
-
-    def gen_oss(self):
-        oss_links = {}
-        for oss_link_name, conf in self._value.get('oss', {}).items():
-            oss_links[oss_link_name] = XwOss(**conf)
-        return oss_links
 
     def __repr__(self):
         return "GlobalValue('%s')" % self.file_path

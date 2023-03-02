@@ -1,65 +1,26 @@
-from datetime import datetime
-import xlrd
 from cli import gen_template
 import re
+from com.excel import ExcelReader
 
 DATETIME_FMT = '%H:%M:%S'
 
 
-class MyExcel():
-    def __init__(self, xls, sheet_name='Sheet1'):
-        self.xls, self.sheet_name = xls, sheet_name
-        self.header, self.rows = self.read_excel_xls()
-        self.dict_table = self.to_dict()
-
-    def read_excel_xls(self, xls='', sheet_name=''):
-        """读取excel,返回字段名和数据(以行为单位) 
-        [['name','local'],
-         ['joe','china']]
-        """
-        xls = xls or self.xls
-        sheet_name = sheet_name or self.sheet_name
-        self.workbook = xlrd.open_workbook(xls)
-        self.sheet = self.workbook.sheet_by_name(sheet_name)
-        rows = []
-        for row in range(self.sheet.nrows):
-            line = []
-            for col in range(self.sheet.ncols):
-                line.append(self.dispaly_value(row, col))
-            rows.append(line)
-        header = rows.pop(0)
-        return header, rows
-
-    def dispaly_value(self, row, col):
-        """return dispaly value which your edit"""
-        # 兼容日期value为浮点数的情况
-        value = self.sheet.cell(row, col)
-        if 3 == value.ctype:
-            date_tuple = xlrd.xldate_as_tuple(
-                self.sheet.cell_value(row, col), self.workbook.datemode)
-            return datetime(*date_tuple).strftime(DATETIME_FMT)
-        return value
-
-    def to_dict(self, header=None, rows=None):
-        """行数据转json格式
-        [{"name","joe"},{"local","china"}]
-        """
-        dict_table = []
-        rows = rows or self.rows
-        header = header or self.header
-        for row in rows:
-            d = {}
-            for i in range(len(row)):
-                key, value = header[i].value.split('/')[-1], row[i].value
-                d[key] = value
-            dict_table.append(d)
-        return dict_table
-
-
 class Excel2Case():
+    """execl转测试用例
+    execl表头
+    title   会转成用例名
+    module  所属模块名称
+    level   优先级(可选）
+    url     接口
+    method  请求方式
+    header  请求头(可选)
+    body    请求体(可选)
+    response  响应(可选)
+    """
+
     def __init__(self, excel_filename, debug=False):
         self.root_path = 'debug_case' if debug else 'case'
-        self.excel_table = MyExcel(excel_filename).dict_table
+        self.excel_table = ExcelReader(excel_filename).get_json_line()
 
     def gen_host_url(self, url: str):
         if '//' in url:
@@ -77,7 +38,7 @@ class Excel2Case():
         if not level:
             conf['level'] = level
         conf['method'] = row.get('method')
-        conf['module'] = row.get('module')
+        conf['module'] = row.get('module') or ''
         conf['headers'] = row.get('headers', '')
         body = row.get('body', '')
         if body:
@@ -94,4 +55,4 @@ class Excel2Case():
 
 
 if '__main__' == __name__:
-    Excel2Case('xxx.xlsx').gen_case()
+    Excel2Case('').gen_case()

@@ -8,8 +8,6 @@ from com.error import AutoTestException
 import re
 from jsonpath import jsonpath
 from com.db import BaseDatabase
-from com.xw_oss import XwOss
-
 
 def get_json_path_and_key(s: str):
     """获取替换关键字和json_path
@@ -117,12 +115,6 @@ class ValueTemplate(ValueMixin):
 
     def set_db(self, value):
         self._value['_db'] = value
-
-    def get_oss(self, oss_name) -> XwOss:
-        return self._value['_oss'][oss_name]
-
-    def set_oss(self, value):
-        self._value['_oss'] = value
 
     def copy(self):
         # 网络类型的对象深拷贝会报错
