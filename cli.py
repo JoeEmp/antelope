@@ -75,8 +75,6 @@ def gen_template(path, module='', t=False, *args, **kwargs):
     context = gen_case_value_context()
     with open(full_value_path, 'w') as f:
         f.write(context)
-    os.system('touch {}'.format(Case.check_file_name.format(full_perfix)))
-    os.system('touch {}'.format(Case.schema_file_name.format(full_perfix)))
 
 
 def show_yaml_dict(yaml_file):

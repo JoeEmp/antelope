@@ -35,7 +35,7 @@ python3 init_project_conf.py ipc test
 
 # 使用自动生成模板脚本
 
-python3 cli.py gt test_case/hello_world
+python3 cli.py gt hello_world
 
 # 编写自动化脚本
 

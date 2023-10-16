@@ -1,8 +1,8 @@
 
 import os
-from shutil import copyfile
 import fire
 from colorama import Fore, init
+import yaml
 
 init(autoreset=True)
 
@@ -19,7 +19,7 @@ GLOBAL_VALUE_FILENAME = '%s'
 # 邮件配置
 EMAIL_FILENAME = '%s'
 # 错误用例生成文件名格式
-ERROR_SUITE = '%s_error_suite.yaml'
+ERROR_SUITE = 'suite/%s_error_suite.yaml'
 """
 
 
@@ -61,8 +61,8 @@ def init_project_conf(dir_name):
     global_value_path = os.path.join(dir_name, 'global_value.yaml')
     email_conf_path = os.path.join(dir_name, 'email_conf.yaml')
     init_dir(dir_name)
-    copyfile('global_value.yaml', global_value_path)
-    copyfile('email_conf.yaml', email_conf_path)
+    init_global_value(global_value_path)
+    init_email_value(email_conf_path)
     init_new_marco(global_value_path, email_conf_path)
     init_cli(dir_name)
 
@@ -76,6 +76,50 @@ def init_cli(dir_name):
             lines[index] = key_line.format(dir_name)+'\n'
     with open('cli.py', 'w') as f:
         f.writelines(lines)
+
+
+def init_global_value(filename):
+    context = {
+        "demo":
+        {
+            "db":
+            {
+                "mysql": {
+                    "host": "127.0.0.1",
+                    "username": "root",
+                    "pwd": "123456",
+                    "port": 3306,
+                    "type": "mysql",
+                }
+            }
+        }
+    }
+    with open(filename, 'w') as f:
+        f.write(yaml.dump(context))
+        f.close()
+
+
+def init_email_value(filename):
+    context = {
+        "sender_addr": "",
+        "sender_pwd": "",
+        # 可选发件人名字
+        "sender_name": "Joe",
+        "host": "smtp.exmail.qq.com",
+        "port": 465,
+        "use_ssl": True,
+
+        # 填入数组或者单个邮箱都可以
+        # to_addrs: hemingjie@wxchina.com
+        "to_addrs": [
+            "hemingjie@wxchina.com"],
+        # 调试模式下，收件人为发件人
+        "is_debug": False
+
+    }
+    with open(filename, 'w') as f:
+        f.write(yaml.dump(context))
+        f.close()
 
 
 def reset_conf():
