@@ -4,21 +4,26 @@ import logging
 import os
 from pprint import pprint
 import sqlite3
-from time import sleep
 from com.allure_api import AllureApi
 from colorama import Fore, init
 
 init(autoreset=True)
 
-def pass_print(s):
-    print(Fore.GREEN + s)
 
-def error_print(s):
-    print(Fore.RED + s)
+def pass_print(s, *args, **kwargs):
+    print(Fore.GREEN + s, *args, **kwargs)
 
 
-def normal_print(s):
-    print(Fore.BLUE + s)
+def error_print(s, *args, **kwargs):
+    print(Fore.RED + s, *args, **kwargs)
+
+
+def normal_print(s, *args, **kwargs):
+    print(Fore.CYAN + s, *args, **kwargs)
+
+
+def warning_print(s, *args, **kwargs):
+    print(Fore.YELLOW + s, *args, **kwargs)
 
 
 module_path_allure_status_map = {
@@ -33,8 +38,9 @@ allure_status_module_path__map = {v: k for k,
 
 
 def init_env():
-    # 开启服务
+    normal_print('开启测试服务')
     os.system('nohup python3 simple_server.py &')
+    normal_print('创建测试数据库')
     conn = sqlite3.connect('regression_test.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE COMPANY
@@ -51,7 +57,7 @@ def check(allure_path='allure'):
     error_cases = []
     allure_behaviors = 'report/last/data/behaviors.json'
     if not AllureApi(allure_path).has_env:
-        print('需要人工检查测试结果')
+        warning_print('未安装allure,需要人工检查测试结果')
         return
     elif not os.path.exists(allure_behaviors):
         raise FileNotFoundError('报告生成异常')
@@ -78,15 +84,16 @@ def check(allure_path='allure'):
                             error_cases.append('case执行结果为%s不符合预期,用例名称为%s' % (
                                 allure_status_module_path__map[case['status']], case['name']))
         except KeyError as e:
-            print(case)
             logging.exception(e)
             raise ValueError(f'allure文件解析失败,请检查文件"{allure_behaviors}"')
         return error_cases
 
 
 def teardown_env():
+    normal_print('关闭测试服务', end='、')
     os.system(
         """ ps -ef | grep "simple_server.py" | awk -F " " '{print "kill -9 " $2}' | sh """)
+    normal_print('清理临时数据库')
     if os.path.exists('regression_test.db'):
         os.remove('regression_test.db')
 
@@ -96,11 +103,14 @@ def flow(allure_path='allure'):
     try:
         normal_print('环境准备')
         init_env()
-        os.system('source venv/bin/activate && python3 runner.py tests/interpreter_case/ -e demo')
-        error_cases = check(allure_path)
+        normal_print('开始执行测试')
+        os.system(
+            'source venv/bin/activate && coverage run runner.py tests/interpreter_case/ -e demo')
+        normal_print('完成测试')
         print()
         print('-'*100)
-        normal_print('开始自检')
+        normal_print('开始框架自检:')
+        error_cases = check(allure_path)
         if error_cases:
             error_print('存在错误用例')
             pprint(error_cases)
@@ -108,11 +118,11 @@ def flow(allure_path='allure'):
             pass_print('无错误用例')
     except Exception as e:
         logging.exception(e)
+        error_print(e)
     finally:
-        normal_print('完成测试')
-        normal_print('环境清理')
+        normal_print('结束框架自检')
+        normal_print('开始环境清理:')
         teardown_env()
-
 
 
 flow()

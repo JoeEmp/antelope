@@ -67,7 +67,7 @@ coverage html -d report/demo_html
 
 # module 为框架能力的测试用例
 
-python3 runner.py tests -e demo -debug
+python3 regression_test.py
 
 ```
 ### 贡献者

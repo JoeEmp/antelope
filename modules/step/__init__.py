@@ -11,7 +11,6 @@ from modules.step.request import RequestStep
 from modules.step.if_else import IfStep, ElifStep, ElseStep, JudgeStep, BranchStep
 from modules.step.echo import EchoStep
 from modules.step.sleep_step import SleepStep
-from modules.step.oss_step import OssStep
 from modules.step.templdate_block import TemplateBlockStep
 
 @unique
@@ -34,7 +33,6 @@ class STEP_TYPE(Enum):
     assertLenNotEqual = AssertLenNotEqualStep
     echo = EchoStep
     sleep = SleepStep
-    oss_upload = OssStep
     assertListEqual = AssertListEqualStep
     assertJson = AssertJsonStep
     assertNotIn = AssertNotInStep

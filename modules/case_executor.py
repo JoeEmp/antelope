@@ -3,7 +3,7 @@ import os
 from typing import List
 from com.file import YamlReader
 from com.log import auto_logger
-from modules.step import SqlExecStep, CaseStep, RequestStep, IfStep, ElifStep, BranchStep, OssStep, ElseStep, TemplateBlockStep
+from modules.step import SqlExecStep, CaseStep, RequestStep, IfStep, ElifStep, BranchStep, ElseStep, TemplateBlockStep
 from com.value import get_value_by_jsonpath, get_json_path_and_key_v2
 from com.error import CaseValueException
 from modules.step import STEP_TYPE
@@ -69,8 +69,8 @@ class CaseExecutorInterFace():
         auto_logger.debug('%s exec %s' % (step_action, step_args_str))
         dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with allure.step(f'{dt} {step_action} exec {step_args_str}'):
-            # sql、oss步骤
-            if issubclass(step_class, (SqlExecStep, OssStep)):
+            # sql 步骤
+            if issubclass(step_class, (SqlExecStep)):
                 # 用例变量获取数据库链接
                 connects = self.case_value
                 step_class(connects, step_args, self.case_value,
@@ -119,8 +119,10 @@ class CaseExecutorInterFace():
             # request步骤从用例模板取
             if issubclass(step_class, RequestStep):
                 if '.' in step_args:
-                    filename, quote_template, content = self._get_target_case_info(step_args)
-                    step_args = CaseTemplateInterFace.gen_request_block(content)
+                    filename, quote_template, content = self._get_target_case_info(
+                        step_args)
+                    step_args = CaseTemplateInterFace.gen_request_block(
+                        content)
                 else:
                     step_args = self.case_template.request_block
             # if 和 elif 只做judge的参数化
@@ -184,7 +186,8 @@ class CaseExecutorInterFace():
             else:
                 step_args = self.gen_step_args(step_args, self.case_value)
         except KeyError as e:
-            raise CaseValueException("用例模板 %s 缺少变量%s" %(self.case_file_name, str(e)))
+            raise CaseValueException("用例模板 %s 缺少变量%s" %
+                                     (self.case_file_name, str(e)))
         return step_args
 
     def gen_step_str(self, step_class, step_args):
@@ -237,8 +240,9 @@ class CaseExecutorInterFace():
         try:
             filename, quote_template = step_args.rsplit('.', 1)
         except ValueError:
-            raise CaseValueException('引用外部用例内容错误,%s'% step_args)
-        content = YamlReader.load_yaml_file('%s.yaml' % filename.replace('.', os.sep))
+            raise CaseValueException('引用外部用例内容错误,%s' % step_args)
+        content = YamlReader.load_yaml_file(
+            '%s.yaml' % filename.replace('.', os.sep))
         return filename, quote_template, content
 
     def __repr__(self):
