@@ -4,9 +4,10 @@ from unittest import TestCase
 from com.error import ReportException, EmailException
 from com.log import auto_logger
 from com.cli import get_env_by_cli
+from com.error import ReportException, EmailException
 from com.macro import *
 from modules.global_value import GlobalValue
-from modules.case import Case
+from modules.case import get_all_case
 from modules.case_executor import CaseExecutor
 import fire
 import os
@@ -21,11 +22,12 @@ import shutil
 class TestYamlCase():
     pass
 
+
 def gen_all_case(cases, global_value, is_test, env, level):
-    # TODO is_test 语法校验
     all_cases = []
     for case in cases:
-        all_cases += Case(case, env, global_value=global_value, level=level)
+        all_cases += get_all_case(case, env,
+                                  global_value=global_value, level=level)
     return all_cases
 
 
@@ -40,10 +42,12 @@ def ins_case_to_class(cases: list, test_case_class: TestCase, level):
 
     def func(self):
         case = q.popleft()
-        case_template, case_value, case_file_name = case
+        _version, case_template, case_value, case_file_name = case
         self.__doc__ = case_file_name
+        # allure 设置
         # 设置用例标题
-        title = case_value._value['_title'] or case_file_name.replace('_template.yaml', '')
+        title = case_value['_title'] or case_file_name.replace(
+            '_template.yaml', '')
         allure.dynamic.title(title)
         if case_value['_module_path']:
             allure.dynamic.tag(case_value['_module_path'])
@@ -54,9 +58,9 @@ def ins_case_to_class(cases: list, test_case_class: TestCase, level):
         allure.dynamic.severity(case_value['_level'])
         allure.dynamic.description(case_value['_remark'])
         # 用例开始
+        auto_logger.info('case begin run')
         auto_logger.info('case %s' % case_template)
         auto_logger.info('case_value %s' % case_value)
-        auto_logger.info('case begin run')
         auto_logger.info('-'*80)
         CaseExecutor(case, level).execute()
         auto_logger.info('-'*80)
@@ -129,7 +133,8 @@ def main(case_file='', e='', t=False, num=None, g=GLOBAL_VALUE_FILENAME, level=D
     auto_logger.debug("after setup by user global value \n%s" %
                       global_value._value)
     # 生成用例
-    all_cases = gen_all_case(cases, is_test=t, global_value=global_value, env=e, level=level)
+    all_cases = gen_all_case(
+        cases, is_test=t, global_value=global_value, env=e, level=level)
     auto_logger.debug('all cases: %s' % all_cases)
     if 0 == len(all_cases):
         print('\n\n用例数量为0请检查%s(文件/目录)\n' % case_file)
@@ -170,9 +175,40 @@ def after_test(pytest_args):
         auto_logger.error(e)
 
 
+def before_test():
+    ops_flow()
+
+
+def ops_flow():
+    """被测环境的构建,具体项目具体定制
+    如果系统有现成的ci/cd则可以无需使用ops_flow去构建环境
+    """
+    pass
+
+
 pytest_args = fire.Fire(main)
 
-if "__main__" == __name__:
-    # 执行用例
+
+def flow(pytest_args):
+    """自动化测试流程
+    before test[ci/cd or other action] -> test -> after test
+    """
+    auto_logger.info('pytest_args: %s' % (pytest_args))
+    auto_logger.info('开始ops流程')
+    before_test()
+    auto_logger.info('开始测试')
     pytest.main(pytest_args)
-    after_test(pytest_args)
+    auto_logger.info('开始后置动作')
+    if pytest_args:
+        try:
+            after_test(pytest_args)
+        except ReportException as e:
+            auto_logger.warning(e)
+        except EmailException as e:
+            auto_logger.warning(e)
+        except Exception as e:
+            auto_logger.error(e)
+
+
+if "__main__" == __name__:
+    flow(pytest_args)

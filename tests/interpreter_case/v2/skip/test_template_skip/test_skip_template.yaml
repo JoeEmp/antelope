@@ -1,0 +1,9 @@
+is_api_case: False
+_version: 2.0
+is_skip: True
+
+case:
+  title: 测试模板级别跳过用例
+  module_path: skip
+  test_step:
+    - echo: 测试模板级别跳过用例

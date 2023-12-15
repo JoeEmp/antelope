@@ -35,7 +35,7 @@ class GlobalValue(Value):
                 raise GlobalValueException('缺少数据库类型无法生成链接')
             try:
                 db_class = DB_TYPE[db_type].value
-                db_links[db_link_name] = db_class(**conf)
+                db_links[db_link_name] = db_class.init_by_conf(**conf)
             except KeyError as e:
                 raise AutoTestException('%s类型的db没有具体的实现,请联系开发者' % db_type)
         return db_links

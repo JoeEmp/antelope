@@ -1,0 +1,73 @@
+is_api_case: false
+_version: 2.0
+
+template:
+  - echo: "我是内部template"
+
+template1:
+  - echo: "我是内部template1"
+
+template2:
+  - echo: "我是内部template2"
+  - template: template
+
+case:
+  title: 测试内容引用多个模版
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "thing"
+        value: "bug叫的很大声"
+    - template: template
+    - template: template1
+    - template: tests.interpreter_case.v2.pass.echo.echo_template.template
+    - template: tests.interpreter_case.v2.pass.echo.echo_template.template1
+
+case2:
+  title: 引用内部模版
+  module_path: pass
+  test_step:
+    - template: template
+
+case3:
+  title: 引用内部嵌套模版
+  module_path: pass
+  test_step:
+    - template: template2
+
+case4:
+  title: 引用内部多个模版
+  module_path: pass
+  test_step:
+    - template: template
+    - template: template1
+    - template: template2
+
+case5:
+  title: 引用外部模版
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "thing"
+        value: "bug叫的很大声"
+    - template: tests.interpreter_case.v2.pass.echo.echo_template.template
+
+case6:
+  title: 引用外部嵌套模版
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "thing"
+        value: "bug叫的很大声"
+    - template: tests.interpreter_case.v2.pass.echo.echo_template.template
+    - template: tests.interpreter_case.v2.pass.echo.echo_template.template1
+
+case7:
+  title: 引用外部带请求步骤的模版
+  module_path: pass
+  test_step:
+    - set_by_json: {
+        "username": "admin",
+        "password": "123456"
+      }
+    - template: tests.interpreter_case.v2.pass.first_requests.first_request_template.template

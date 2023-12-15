@@ -1,0 +1,6 @@
+demo: {
+  smoke: {
+    "username": "admin",
+    "password": "123456"
+  }
+}

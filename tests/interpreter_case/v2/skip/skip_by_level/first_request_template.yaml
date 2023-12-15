@@ -1,0 +1,17 @@
+_version: 2.0
+
+request:
+  method: "POST"
+  host: "127.0.0.1"
+  url: "/login"
+  headers: { "User-Agent": "antelope" }
+  body: { "username": "admin", "password": "123456" }
+  response_value_name: response
+
+case:
+  module_path: other
+  title: 优先级为100,会直接过滤掉不会执行
+  level: 100
+  test_step:
+    # 请求步骤
+    - request: request

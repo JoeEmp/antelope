@@ -1,0 +1,23 @@
+demo:
+  username: "admin"
+  pwd: "123456"
+  error_pwd: "654321"
+
+value:
+  - args: {
+      'username': "{username}",
+      'pwd': "{pwd}",
+      'msg': 'login success',
+      'error_msg': '用户登录失败'
+    }
+    module_path: "pass"
+    title: 登录-冒烟测试
+
+  - args: {
+      'username': "{username}",
+      'pwd': "{error_pwd}",
+      'msg': 'the password is error',
+      'error_msg': 'the password is error'
+    }
+    module_path: "pass"
+    title: 错误的密码登录失败

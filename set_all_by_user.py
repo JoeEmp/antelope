@@ -14,3 +14,9 @@ class SetUpAllByUser(SetUpAll):
         """用户自行实现"""
         # status, token = self.login()
         # self.global_value['token'] = token
+
+def setup_all():
+    pass
+
+def tear_all():
+    pass

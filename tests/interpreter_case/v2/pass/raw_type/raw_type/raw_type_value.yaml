@@ -1,0 +1,11 @@
+demo:
+  {
+    "all_type":
+      {
+        "a_int": 123,
+        "b_bool": true,
+        "c_str": "4565",
+        "d_json": { "name": "meloay" },
+        "e_list": ["123", 456],
+      },
+  }

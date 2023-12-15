@@ -1,0 +1,26 @@
+is_api_case: False
+_version: 2.0
+
+template:
+  - echo: 我是来自echo模版的{thing}
+
+template1:
+  - echo: 我是来自echo模版的template1
+  - template: template
+
+case:
+  title: "v2.0 echo case"
+  module_path: pass
+  test_step:
+    - echo: "life is short i use python"
+    - set_step:
+        name: new
+        value: "paix is comming"
+    - echo: "{new}"
+
+case1:
+  title: "v2.0 echo case1"
+  module_path: pass
+  use_value: sec
+  test_step:
+    - echo: 没有{thing},就没有敬畏

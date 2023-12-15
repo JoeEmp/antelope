@@ -1,0 +1,39 @@
+_version: 2.0
+
+request:
+  host: "http://127.0.0.1:10086"
+  method: "POST"
+  response_value_name: response
+  url: "login"
+  body: { "username": "admin", "password": "123456", "is_test": True }
+
+request2:
+  host: "http://127.0.0.1:10086"
+  method: "POST"
+  response_value_name: response
+  url: "login"
+  body: { "username": "admin", "password": "123456" }
+
+case:
+  title: v2用例请求-用例1
+  module_path: pass
+  test_step:
+    - request: request
+    - if_step:
+        - judge: "1 == 1"
+        - request: request
+    - if_step:
+        - judge: "2 == 2"
+        - request: request2
+
+case2:
+  title: v2用例请求-用例2
+  module_path: pass
+  test_step:
+    - request: request
+    - if_step:
+        - judge: "1 == 1"
+        - request: request
+    - if_step:
+        - judge: "2 == 2"
+        - request: request2

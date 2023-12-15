@@ -1,0 +1,5 @@
+demo:
+  {
+    "嵌套": { "name": "Joe", "result": "Melody" },
+    "else分支": { "name": "kaka", "result": "show error" },
+  }

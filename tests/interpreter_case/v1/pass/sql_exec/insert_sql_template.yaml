@@ -1,0 +1,7 @@
+is_api_case: False
+
+case:
+  - sql_exec:
+      db: regression_test
+      sql: SELECT * FROM COMPANY LIMIT 0,1
+      sql_result_name: row

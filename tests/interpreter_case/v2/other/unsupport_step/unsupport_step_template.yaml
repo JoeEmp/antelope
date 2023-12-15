@@ -1,0 +1,10 @@
+is_api_case: false
+_version: 2.0
+
+case:
+  mudule_path: fail
+  test_step:
+    - set_step:
+        name: "device"
+        value: "MP"
+    - unsupport: abc

@@ -1,0 +1,18 @@
+is_api_case: false
+_version: 2.0
+
+case:
+  title: else分支不做参数化处理
+  module_path: pass
+  use_value: smoke
+  test_step:
+      - set_step:
+          name: "name"
+          value: "melody"
+      - if_step:
+          - judge: '"{name}"== "Yang"'
+      - else_step:
+          - set_step:
+              name: "device"
+              value: "MP"
+          - echo: "{device} {word}"

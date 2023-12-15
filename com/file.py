@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import csv
 import yaml
 import json
 from json.decoder import JSONDecodeError
@@ -10,19 +9,21 @@ from jsonschema.validators import validate
 from com.macro import ERROR_SUITE
 from com.log import auto_logger, time_str
 import os
-
+import re
 
 
 class JsonCheck(metaclass=ABCMeta):
 
-    def json_to_schema(self, to_schema_json) -> dict:
+    def json_to_schema(self, to_schema_json, model='normal') -> dict:
         """json 转 json schema"""
-        return json_to_schema(to_schema_json)
+        return json_to_schema(to_schema_json, model)
 
     @abstractmethod
     def data_check(self, value, template, msg=''):
         """参数校验"""
         template_schema = self.json_to_schema(template)
+        auto_logger.debug(f'schema by templdate: {template_schema}')
+        auto_logger.debug(f'validate value: {value}')
         try:
             result = validate(instance=value, schema=template_schema)
         except ValidationError as e:
@@ -113,9 +114,7 @@ def get_suite_case(suite_file):
 
 def get_case_file_case(case_file):
     yaml_case, py_case = [], []
-    if not os.path.exists(case_file):
-        auto_logger.warning('文件(夹) %s 不存在'%case_file)
-    elif os.path.isfile(case_file):
+    if os.path.isfile(case_file):
         if case_file.endswith('.py'):
             py_case.append(case_file)
         else:
@@ -125,11 +124,34 @@ def get_case_file_case(case_file):
     return yaml_case, py_case
 
 
-def json_to_schema(to_schema_json) -> dict:
-    """json 转 json schema"""
+def is_valid_regex(pattern):
+    try:
+        re.compile(pattern)
+        return True
+    except re.error:
+        return False
+
+
+def json_to_schema(to_schema_json, model='normal') -> dict:
+    """
+    将 JSON 转换为 JSON Schema
+
+    参数：
+    - to_schema_json：待转换的 JSON 数据
+    - model：模式选择，可选值为 'normal'（默认）或 'pattern'(正则)
+
+    返回：
+    生成的 JSON Schema
+    """
+
     builder = SchemaBuilder('http://json-schema.org/draft-07/schema#')
     builder.add_object(to_schema_json)
-    return builder.to_schema()
+    sch = builder.to_schema()
+    if 'pattern' == model:
+        sch['patternProperties'] = sch.pop('properties')
+        sch['required'] = [key for key in sch['required']
+                           if not is_valid_regex(key)]
+    return sch
 
 
 def gen_yaml(filename, content):
@@ -152,14 +174,3 @@ def write_error_suite(case_file_name, filename=''):
         content = [case_file_name]
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(yaml.dump(content, default_flow_style=True))
-
-
-def csv_read(filename, has_title=True):
-    with open(filename) as f:
-        reader = csv.reader(f)
-        rows = list(reader)
-        f.close()
-        if has_title:
-            return rows[0], rows[1:]
-        else:
-            return rows

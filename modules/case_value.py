@@ -1,10 +1,11 @@
 
 from json import JSONDecodeError
+import os
 from typing import Union
 from com.error import AutoTestException, CaseValueException
 from com.log import auto_logger
 from com.file import YamlReader
-from com.value import Value
+from com.value import Value, ValueTemplate
 from modules.global_value import GlobalValue
 import copy
 import json
@@ -125,7 +126,8 @@ class ItemValue(Value):
     def gen_value(self, item_conf: dict, item_value: GlobalValue) -> dict:
         """将每一个args转化成既定的参数,供用例执行.
 
-        Args:
+
+                    Args:
             item_conf (dict):  xx_value.yaml的value块的某一项
             item_value (GlobalValue): 用例/全局变量的copy
 
@@ -171,3 +173,25 @@ class ItemValue(Value):
             return value
         except JSONDecodeError as e:
             raise CaseValueException('args字符串不是json字符串,请检查用例变量文件')
+
+
+class CaseValuesV2(Value):
+    """ Mapping {case_perfix}_value.yaml file
+    """
+
+    def __init__(self, env, global_value: GlobalValue, file_path):
+        if os.path.exists(file_path):
+            super().__init__(file_path)
+        else:
+            auto_logger.warning(f'未找到{file_path}文件,用例变量为空')
+            self._value = {}
+        self._value = self._value.get(env, {})
+        if not self._value:
+            auto_logger.warning(f'{file_path}用例变量配置文件在{env}环境下,无任何配置')
+        for key, value in self._value.items():
+            global_copy = global_value.copy()
+            global_copy.update(value)
+            self._value[key] = global_copy
+
+    def __repr__(self):
+        return f'{self._value}'

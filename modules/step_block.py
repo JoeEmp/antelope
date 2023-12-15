@@ -9,6 +9,7 @@ class StepsBlock():
         self.filename = filename
         self.request_block = self.gen_request_block()
         self.steps = self.gen_can_execute_block(steps_block)
+        self.test_step = self.steps
 
     def gen_can_execute_block(self, steps_block):
         from modules.step import STEP_TYPE

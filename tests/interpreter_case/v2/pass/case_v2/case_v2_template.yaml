@@ -1,0 +1,19 @@
+_version: 2.0
+is_api_case: False
+
+case:
+  title: case_v2 冒烟测试
+  use_value: smoke
+  module_path: pass
+  test_step:
+    - case_v2:
+        filename: tests/interpreter_case/v2/pass/echo/echo_template.yaml
+        case_name: case1
+
+case1:
+  title: case_v2 缺少变量执行故障
+  module_path: abort
+  test_step:
+    - case_v2:
+        filename: tests/interpreter_case/v2/pass/echo/echo_template.yaml
+        case_name: case1

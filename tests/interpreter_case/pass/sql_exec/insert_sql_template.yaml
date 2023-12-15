@@ -1,7 +1,0 @@
-is_api_case: False
-
-case:
-  - sql_exec:
-      db: mysql
-      sql: SELECT * FROM `test_year`.`user` LIMIT 0,1
-      sql_result_name: row

@@ -1,0 +1,20 @@
+is_api_case: False
+_version: 2.0
+
+case:
+  module_path: skip
+  exec_env: show
+  test_step:
+    - echo: hello melody
+
+case1:
+  module_path: skip
+  exec_env: test
+  test_step:
+    - echo: hello melody
+
+case2:
+  module_path: pass
+  exec_env: demo
+  test_step:
+    - echo: hello melody

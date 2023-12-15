@@ -1,0 +1,20 @@
+_version: 2.0
+request:
+  method: "POST"
+  host: "http://127.0.0.1:10086"
+  url: "/login"
+  body: { "username": "admin", "password": "123456" }
+  response_value_name: response
+
+case:
+  module_path: pass
+  title: 测试无变量模板
+  test_step:
+    - request: request
+    - set_step:
+        name: code
+        value: "${response}.code"
+    - assertEqual:
+        - "${code}"
+        - 200
+        - 登录失败

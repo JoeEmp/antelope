@@ -2,6 +2,7 @@ from modules.step import Step
 from abc import ABCMeta
 from com.error import BranchException, JudgeException
 from modules.step_block import StepsBlock
+from com.log import auto_logger
 
 
 class BranchStep(Step, metaclass=ABCMeta):
@@ -29,11 +30,9 @@ class BranchStep(Step, metaclass=ABCMeta):
 
     def _judge_execute(self, executor):
         try:
-            executor((self.args, self.case_value, self.case_filename),
-                     self.case_value['_level']).execute()
-            self.case_value['_if_value'] = True
+            executor((self.args, self.case_value, self.case_filename),self.case_value['_level']).execute()
         except JudgeException:
-            self.case_value['_if_value'] = False
+            auto_logger.debug('out of branch')
 
 
 class IfStep(BranchStep):
@@ -93,6 +92,7 @@ class JudgeStep(Step):
         super().__init__(args, case_value, case_filename)
         msg = '{}文件judge格式错误'.format(case_filename)
         self.data_check(args, msg=msg)
+        self.case_value = case_value
         self.args = args
 
     def data_check(self, value, template='', msg=''):
@@ -101,7 +101,10 @@ class JudgeStep(Step):
     def execute(self):
         # evil code
         result = bool(eval(self.args))
-        if not result:
+        if result:
+            self.case_value['_if_value'] = True
+        else:
+            self.case_value['_if_value'] = False
             raise JudgeException('%s is fail' % self.args)
 
     @classmethod

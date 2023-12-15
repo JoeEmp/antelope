@@ -1,0 +1,22 @@
+is_api_case: false
+_version: 2.0
+
+case:
+  title: "用例模版变量替换"
+  module_path: pass
+  use_value: mul
+  test_step:
+    # 列表
+    - echo: "{phone}.0"
+    # obj
+    - echo: "{info}.sub_obj"
+    # int
+    - echo: "{info}.money"
+    # bool
+    - echo: "{info}.is_del"
+    # null
+    - echo: "{info}.for_nothing"
+    # 嵌套obj
+    - echo: "{info}.sub_obj.thr_obj.pre"
+    # 列表嵌套 obj
+    - echo: "{info}.accounts.1.username"

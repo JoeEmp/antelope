@@ -143,3 +143,4 @@ demo*
 *error_suite.yaml
 *coverage*
 suite
+*.db

@@ -1,0 +1,37 @@
+is_api_case: False
+_version: 2.0
+
+case:
+  title: 测试类型
+  module_path: pass
+  use_value: all_type
+  test_step:
+    - assertValueType:
+          value: "${a_int}"
+          type: int
+          msg: 类型错误
+
+    - assertValueType:
+          value: "${b_bool}"
+          type: bool
+          msg: 类型错误
+
+    - assertValueType:
+          value: "{c_str}"
+          type: str
+          msg: 类型错误
+
+    - assertValueType:
+          value: "${d_json}"
+          type: dict
+          msg: 类型错误
+
+    - assertValueType:
+          value: "${e_list}"
+          type: list
+          msg: 类型错误
+
+    - assertValueType:
+          value: "${e_list}.1"
+          type: int
+          msg: 类型错误

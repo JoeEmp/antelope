@@ -1,0 +1,21 @@
+_version: 2.0
+
+request:
+  host: "https://ug.baidu.com"
+  method: "POST"
+  response_value_name: response
+  url: "mcp/pc/pcsearch"
+  body: { "invoke_info": { "pos_1": [{}], "pos_2": [{}], "pos_3": [{}] } }
+
+case:
+  title: "请求步骤在分支路径"
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "into_branch"
+        value: 1
+    - if_step:
+        - judge: "{into_branch} == 1"
+        - request: request
+    - else_step:
+        - echo: hello

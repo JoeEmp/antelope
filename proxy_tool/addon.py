@@ -1,4 +1,5 @@
 # 在项目项目根目录执行
+# 用于接口录制
 import sys
 import os
 if os.path.dirname(os.getcwd()) == os.path.dirname(__file__):

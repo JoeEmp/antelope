@@ -1,0 +1,12 @@
+is_api_case: false
+_version: 2.0
+
+case:
+  title: 列表断言
+  module_path: pass
+  test_step:
+    - echo: "应该测试通过"
+    - assertListEqual:
+        - [1, 2]
+        - [1, 2]
+        - 断言错误，请修复断言步骤

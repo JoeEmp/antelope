@@ -1,0 +1,11 @@
+is_api_case: False
+_version: 2.0
+
+case:
+  title: sleep步骤
+  module_path: pass
+  test_step:
+    - sleep: 1
+    - echo: 'after 1.0 sec'
+    - sleep: 2.2
+    - echo: 'after 2.2 sec'

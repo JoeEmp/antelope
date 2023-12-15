@@ -1,4 +1,0 @@
-value:
-  - args: '{"username":"tester_args"}'
-    module_path: "sql"
-    title: sql 测试

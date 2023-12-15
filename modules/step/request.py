@@ -92,15 +92,14 @@ class RequestStep(Step):
             auto_logger.info('requests time is %dms' % int((time.time() - start_time)*1000))
             code = result.status_code
             self.case_value[self.response_value_name] = result.json()
-            # TODO 针对conten-type 做不同的返回
-            return code, result.json()
         except requests.Timeout as e:
             raise RequestException('%s请求超时' % self.args['url'])
         except requests.RequestException as e:
             print('Url==> {} 请求异常 \n 错误信息为==> {}'.format(self.args["url"], e))
         except Exception as e:
             raise AutoTestException(str(e))
-
+        # TODO 针对conten-type 做不同的返回
+        return code, result.json()
 
     def check_responese(self):
         pass

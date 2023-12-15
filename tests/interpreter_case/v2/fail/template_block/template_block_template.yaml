@@ -1,0 +1,39 @@
+is_api_case: false
+_version: 2.0
+
+template:
+  - assertEqual:
+      first: 2
+      second: 1
+      msg: "from template"
+  - assertEqual:
+      first: 2
+      second: 1
+      msg: "from template second step"
+
+template2:
+  - assertEqual:
+      first: 3
+      second: 2
+      msg: "from template2"
+  - assertEqual:
+      first: 2
+      second: 2
+      msg: "from template2 second step"
+
+template3:
+  - template: template
+
+case:
+  title: 执行多个模版
+  module_path: fail
+  test_step:
+    - template: template
+    - template: template2
+
+case1:
+  title: 执行嵌套模版
+  module_path: fail
+  test_step:
+    - template: template
+    - template: template3

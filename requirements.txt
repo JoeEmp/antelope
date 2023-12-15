@@ -16,3 +16,4 @@ oss2
 colorama
 openpyxl
 mitmproxy
+flask

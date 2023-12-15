@@ -1,0 +1,12 @@
+is_api_case: false
+_version: 2.0
+
+case:
+  module_path: fail
+  test_step:
+    - assertListEqual:
+       first:  [{"id":1},{"id":2}]    # 预期结果
+       second: [{"id":1},{"id":3}]    # 实际结果
+       msg: 断言错误，执行正常      # 错误信息
+       is_ignore_null: false  # 可选,默认不忽略null值的key
+       is_sort: false         # 可选,默认不排序

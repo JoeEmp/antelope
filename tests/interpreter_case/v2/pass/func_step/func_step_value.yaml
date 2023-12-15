@@ -1,0 +1,4 @@
+value:
+  - title: 各种形式的调用
+    module_path: pass
+    args: { "func_path": "function.demo_func.echo_strcat_name" }

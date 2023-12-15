@@ -1,0 +1,19 @@
+is_api_case: False
+_version: 2.0
+
+case:
+  title: 用is_skip跳过执行
+  module_path: skip
+  is_skip: True
+  test_step:
+    - set_step:
+        name: token
+        value: "123"
+
+case1:
+  title: 文件其他用例使用skip,本用例正常执行
+  module_path: pass
+  test_step:
+    - set_step:
+        name: token
+        value: "123"

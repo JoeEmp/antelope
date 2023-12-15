@@ -1,3 +1,4 @@
+import shutil
 import sys
 import fire
 from modules.case import Case
@@ -7,12 +8,12 @@ import os
 import yaml
 from com.file import YamlReader
 from modules.step import STEP_TYPE
-
+import xml.etree.ElementTree as et
 
 def gen_case_value_context(global_value_file=GLOBAL_VALUE_FILENAME):
     all_env_conf = YamlReader.load_yaml_file(global_value_file)
     env_value_str = ':\n\n'.join(list(all_env_conf.keys())) + ':\n\n'
-    return env_value_str+"value:\n  - title: '冒烟测试'"
+    return env_value_str + "value:\n  - title: '冒烟测试'"
 
 
 def gen_case_template_context(path, url='', method='', host='', level='', headers='', body='', module=''):
@@ -75,6 +76,8 @@ def gen_template(path, module='', t=False, *args, **kwargs):
     context = gen_case_value_context()
     with open(full_value_path, 'w') as f:
         f.write(context)
+    os.system('touch {}'.format(Case.check_file_name.format(full_perfix)))
+    os.system('touch {}'.format(Case.schema_file_name.format(full_perfix)))
 
 
 def show_yaml_dict(yaml_file):
@@ -85,7 +88,7 @@ def show_yaml_dict(yaml_file):
         print(ds)
 
 
-def gen_code_snippet(filename='xw_auto_test.json.code-snippets'):
+def gen_code_snippet(filename='antelope.json.code-snippets'):
     if 'darwin' == sys.platform.lower():
         home = os.popen('echo $HOME').read().replace('\n', '')
         filename = os.path.join(
@@ -112,9 +115,102 @@ def gen_code_snippet(filename='xw_auto_test.json.code-snippets'):
         f.write(gen_snippet())
 
 
-def gen_pychram_snippet():
+def gen_pychram_live_template(filename='antelope.xml'):
     # https://www.jetbrains.com/help/pycharm/sharing-live-templates.html
-    pass
+    # pycharm 每个版本都有自己的配置，采取全部更新策略
+    xml_tree = gen_live_template()
+    if 'darwin' == sys.platform.lower():
+        # MacOS
+        home = os.popen('echo $HOME').read().replace('\n', '')
+        perfix = f'{home}/Library/Application Support/JetBrains'
+        for root, dirs, file in os.walk(perfix):
+            for d in dirs:
+                full_template_path = os.path.join(perfix, d, 'templates')
+                if 'pycharm' in d.lower() and os.path.exists(full_template_path):
+                    filename = os.path.join(full_template_path, filename)
+                    xml_tree.write(filename, 'utf-8', xml_declaration=True)
+                    print(filename)
+            break
+    elif 'win32' == sys.platform.lower():
+        # window
+        # C:\Users\aitest\AppData\Roaming\JetBrains\PyCharmCE2023.1\templates
+        # C:\Users\aitest\AppData\Roaming\JetBrains\PyCharmxxx\templates
+        print('windows')
+        shell = os.popen('echo $SHELL').read()
+        is_unix_style = os.popen('pwd').read().startswith('/')
+        # bash
+        if is_unix_style:
+            home = os.environ['HOME']
+            perfix = f'{home}/AppData/Roaming/JetBrains'
+            for root, dirs, file in os.walk(perfix):
+                for d in dirs:
+                    full_template_path = os.path.join(perfix, d, 'templates')
+                    if 'pycharm' in d.lower() and os.path.exists(full_template_path):
+                        filename = os.path.join(full_template_path, filename)
+                        xml_tree.write(filename, 'utf-8', xml_declaration=True)
+                        print(filename)
+        else:
+            # cmd
+            if '$SHELL' in shell:
+                home = os.popen('echo %USERPROFILE%').read().replace('\n', '')
+            # power shell
+            else:
+                home = os.popen('echo $HOME').read().replace('\n', '')
+            perfix = f'{home}\\AppData\\Roaming\\JetBrains'
+            for root, dirs, file in os.walk(perfix):
+                for d in dirs:
+                    full_template_path = f'{perfix}\\{d}\\templates'
+                    if 'pycharm' in d.lower() and os.path.exists(full_template_path):
+                        filename = f'{full_template_path}\\{filename}'
+                        xml_tree.write(filename, 'utf-8', xml_declaration=True)
+                        print(filename)
+    else:
+        print('该系统未支持')
+    xml_tree.write('antelope_live_template.xml', 'utf-8', xml_declaration=True)
+
+
+def gen_live_template():
+    """生成IDEA的live template
+    结构例子:
+    <templateSet group="user">
+      <template name="set_step" value="- set_step:&#10;    name:&#10;    value:" description="" toReformat="false" toShortenFQNames="true">
+        <context>
+          <option name="OTHER" value="true" />
+        </context>
+      </template>
+      <template name="set_value" value="- set_value:&#10;    name:&#10;    value:" description="" toReformat="false" toShortenFQNames="true">
+        <context>
+          <option name="OTHER" value="true" />
+        </context>
+      </template>
+    </templateSet>
+    """
+
+    def gen_template_ele(parent: et.Element, name: str, value: str) -> et.ElementTree:
+        if value:
+            body_lines = value.split('\n')
+            body_lines = [body_line for body_line in body_lines if body_line]
+            unuse_sep_len = len(body_lines[0]) - len(body_lines[0].lstrip(' '))
+            value = value.replace(' '*unuse_sep_len, '').lstrip(os.linesep)
+        template = et.SubElement(parent, 'template', {
+            'name': name,
+            'value': value,
+            'description': '',
+            'toReformat': 'false',
+            'toShortenFQNames': 'true'
+        })
+        return template
+
+    template_set = et.Element('templateSet')
+    template_set.set('group', 'antelope')
+    for name, body_text, desc in get_snippet():
+        template = gen_template_ele(template_set, name, body_text)
+        context = et.SubElement(template, 'context')
+        option = et.SubElement(context, 'option', {
+            'name': 'OTHER',
+            'value': 'true'
+        })
+    return et.ElementTree(template_set)
 
 
 def gen_snippet():
@@ -125,8 +221,7 @@ def gen_snippet():
         body_lines = [body_line for body_line in body_lines if body_line]
         if body_lines:
             unuse_sep_len = len(body_lines[0]) - len(body_lines[0].lstrip(' '))
-            body_lines = [body_line[unuse_sep_len:]
-                          for body_line in body_lines if body_line]
+            body_lines = [body_line[unuse_sep_len:] for body_line in body_lines if body_line]
         snippet_dict[prefix] = {
             'prefix': prefix,
             "scope": 'yaml',
@@ -142,11 +237,20 @@ def get_snippet() -> tuple:
             yield i.name, *i.value.snippet()
 
 
+def clear_data():
+    shutil.rmtree(os.path.join('report'), ignore_errors=FileNotFoundError)
+    shutil.rmtree(os.path.join('suite'), ignore_errors=FileNotFoundError)
+    shutil.rmtree(os.path.join('log'), ignore_errors=FileNotFoundError)
+    os.mkdir('report')
+    os.mkdir('suite')
+    os.mkdir('log')
+
+
 gt = gen_template
 gs = gen_snippet
+lt = gen_live_template
 gsvscode = gen_code_snippet
-gspycha = gen_pychram_snippet
+gspycha = gen_pychram_live_template
 
 if "__main__" == __name__:
     fire.Fire()
-    # show_yaml_dict('./demo_case/aiot_login_min/aiot_login_min_template.yaml')

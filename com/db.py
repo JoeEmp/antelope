@@ -1,4 +1,4 @@
-from records import Database, Connection,Record,RecordCollection
+from records import Database, Connection, Record, RecordCollection
 from com.log import auto_logger
 from urllib.parse import quote
 from enum import Enum, unique
@@ -8,26 +8,15 @@ from sqlalchemy import text, exc
 
 class BaseDatabase(Database):
 
-    def __init__(self, host: str, username: str, pwd: str, port: int, dbname=None, **kwargs):
-        """建立数据库链接
 
-        Args:
-            host (str): 数据库服务的主机名
-            username (str): 用户名
-            pwd (str): 密码
-            port (int): 端口名
-            dbname (str, optional): 数据库名
-        """
-        host = quote(host, 'utf-8')
-        username = quote(username, 'utf-8')
-        pwd = quote(pwd, 'utf-8')
-        db_url = self.gen_db_url(host, username, pwd, port, dbname)
-        self.db_url = db_url
-        super().__init__(db_url=db_url, **kwargs)
-
+    @classmethod
     @abstractmethod
-    def gen_db_url(self, host, username, pwd, port, dbname=None):
+    def gen_db_url(cls, *args, **kwargs):
         pass
+
+    @classmethod
+    def init_by_conf(cls, *args, **kwargs):
+        return cls(cls.gen_db_url(*args, **kwargs))
 
     def get_connection(self):
         """Get a connection to this Database. Connections are retrieved from a
@@ -71,6 +60,7 @@ class BaseConnection(Connection):
 
 class MySQLDataBase(BaseDatabase):
 
+    @classmethod
     def gen_db_url(self, host, username, pwd, port, dbname=None):
         if dbname:
             db_url = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(
@@ -83,9 +73,17 @@ class MySQLDataBase(BaseDatabase):
 
 class PostgreSQLDataBase(BaseDatabase):
 
-    def gen_db_url(self, host, username, pwd, port, dbname):
+    @classmethod
+    def gen_db_url(cls, host, username, pwd, port, dbname):
         return 'postgresql+psycopg2://{}:{}@{}:{}/{}'.format(
             username, pwd, host, port, dbname)
+
+
+class SQLiteDataBase(BaseDatabase):
+
+    @classmethod
+    def gen_db_url(self, filename):
+        return "sqlite:///%s" % filename
 
 
 @unique
@@ -93,3 +91,4 @@ class DB_TYPE(Enum):
     # 新增数据库链接需要在枚举新增
     mysql = MySQLDataBase
     pg = PostgreSQLDataBase
+    sqlite = SQLiteDataBase

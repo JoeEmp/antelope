@@ -1,0 +1,41 @@
+is_api_case: False
+_version: 2.0
+
+case:
+  title: 变量替换的冒烟测试
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "list_str"
+        value: "[1,2,3]"
+    - assertValueType:
+        value: "{list_str}"
+        type: str
+        msg: "list_str is str"
+  
+    - assertValueType:
+        value: "${list_str}.1"
+        type: bool
+        msg: "list_str is str"
+  
+    - set_step:
+        name: "list_value"
+        value: [1, 2, 3]
+    - echo: "{list_value}"
+    - echo: "{list_value}.1"
+
+    - set_step:
+        name: "json_str"
+        value: { "a": [1, 2, 3] }
+    - assertValueType:
+        value: "${json_str}.a"
+        type: list
+        msg: 类型错误
+
+    - echo: "{json_str}.a.1"
+  
+    - set_step:
+        name: "json_list"
+        value: "{json_str}.a"
+    - echo: "{json_list}"
+  

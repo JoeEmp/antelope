@@ -1,0 +1,43 @@
+_version: 2.0
+
+case:
+  title: sql测试
+  module_path: pass
+  test_step:
+    - set_step:
+        name: "username"
+        value: "tester_args"
+    # insert语句
+    - sql_exec:
+        db: regression_test
+        sql: INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (1, 'Paul', 32, 'California', 20000.00 )
+        sql_result_name: row
+
+    - sql_exec:
+        db: regression_test
+        sql: INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) VALUES (2, 'Allen', 25, 'Texas', 15000.00 )
+        sql_result_name: row
+
+
+    # update语句
+    - sql_exec:
+        db: regression_test
+        sql: UPDATE COMPANY set SALARY = 25000.00 where ID=1
+        sql_result_name: row
+
+    # select 语句
+    - sql_exec:
+        db: regression_test
+        sql: select * from COMPANY where ID = 1
+        sql_result_name: row
+
+    - assertEqual:
+        first: ${row}.0.ID
+        second: 1
+        msg: 插入数据库异常，请修复
+
+    # delete语句
+    - sql_exec:
+        db: regression_test
+        sql: delete from COMPANY
+        sql_result_name: row

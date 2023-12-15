@@ -1,0 +1,24 @@
+_version: 2.0
+is_api_case: False
+ 
+case:
+  title: 单个断言断言失败
+  module_path: fail
+  test_step:
+      - assertEqual:
+          first: 1
+          second: 2
+          msg: '断言失败,执行正常'
+
+case1:
+  title: 执行完全部断言再失败
+  module_path: fail
+  test_step:
+      - assertEqual:
+          first: 1
+          second: 2
+          msg: '断言失败,执行正常'
+      - assertIn:
+          member: 'a'
+          container: 'bab'
+          msg: '断言错误，该断言应该通过'

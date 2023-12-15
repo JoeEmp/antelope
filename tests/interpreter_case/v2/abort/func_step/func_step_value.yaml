@@ -1,0 +1,24 @@
+value:
+  - title: 找不到方法,执行故障
+    module_path: abort
+    args: { "func_path": "function.joe_func.unexist_func" }
+
+  - title: 找不到文件,执行故障
+    module_path: abort
+    args: { "func_path": "myfunc.unexist_func" }
+
+  - title: 找不到二级文件,执行故障
+    module_path: abort
+    args: { "func_path": "function.coco.unexist_func" }
+
+  - title: 无法使用runner的方法,执行故障
+    module_path: abort
+    args: { "func_path": ".a" }
+
+demo:
+  {
+    "func_not_found": { "func_path": "function.joe_func.unexist_func" },
+    "file_not_found": { "func_path": "myfunc.unexist_func" },
+    "dir_file_not_found": { "func_path": "function.coco.unexist_func" },
+    "use_runner_func": { "func_path": ".a" },
+  }

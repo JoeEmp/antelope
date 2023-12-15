@@ -1,0 +1,10 @@
+value:
+  - title: "执行环境为demo,运行环境为test,执行跳过"
+    args: {}
+    exec_env: test
+    module_path: "skip"
+
+  - title: "执行环境为demo,运行环境为demo,正常执行"
+    args: {}
+    exec_env: demo
+    module_path: "pass"
