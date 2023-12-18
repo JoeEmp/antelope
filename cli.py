@@ -25,7 +25,8 @@ def gen_case_template_context(path, url='', method='', host='', level='', header
             'url': url,
             'response_value_name': 'response'
         },
-        'case': [{'request': 'request'}]
+        'case': {"test_step": [{'request': 'request'}]},
+        '_version': 2.0
     }
     if isinstance(level, int):
         d['level'] = level
@@ -76,8 +77,9 @@ def gen_template(path, module='', t=False, *args, **kwargs):
     context = gen_case_value_context()
     with open(full_value_path, 'w') as f:
         f.write(context)
-    os.system('touch {}'.format(Case.check_file_name.format(full_perfix)))
-    os.system('touch {}'.format(Case.schema_file_name.format(full_perfix)))
+    # NOTE 和接口测试耦合，故注释
+    # os.system('touch {}'.format(Case.check_file_name.format(full_perfix)))
+    # os.system('touch {}'.format(Case.schema_file_name.format(full_perfix)))
 
 
 def show_yaml_dict(yaml_file):

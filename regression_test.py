@@ -4,11 +4,13 @@ import logging
 import os
 from pprint import pprint
 import sqlite3
+import sys
 from com.allure_api import AllureApi
 from colorama import Fore, init
 
-init(autoreset=True)
+is_win32 = True if 'win32' == sys.platform.lower() else False
 
+init(autoreset=True)
 
 def pass_print(s, *args, **kwargs):
     print(Fore.GREEN + s, *args, **kwargs)
@@ -37,9 +39,25 @@ allure_status_module_path__map = {v: k for k,
                                   v in module_path_allure_status_map.items()}
 
 
+def start_http_server():
+    if not is_win32:
+        os.system(""" ps -ef | grep "simple_server.py" | awk -F " " '{print "kill -9 " $2}' | sh """)
+    else:
+        os.system('taskkill /pid 10086 -F')
+
+def kill_http_server():
+    if not is_win32:
+        os.system(""" ps -ef | grep "simple_server.py" | awk -F " " '{print "kill -9 " $2}' | sh """)
+    else:
+        os.system('taskkill /pid 10086 -F')
+        
+
 def init_env():
     normal_print('开启测试服务')
-    os.system('nohup python3 simple_server.py &')
+    if 'win32' == sys.platform.lower():
+        os.system('start /min python3 simple_server.py')
+    else:
+        os.system('nohup python3 simple_server.py &')
     normal_print('创建测试数据库')
     conn = sqlite3.connect('regression_test.db')
     c = conn.cursor()
@@ -91,8 +109,7 @@ def check(allure_path='allure'):
 
 def teardown_env():
     normal_print('关闭测试服务', end='、')
-    os.system(
-        """ ps -ef | grep "simple_server.py" | awk -F " " '{print "kill -9 " $2}' | sh """)
+
     normal_print('清理临时数据库')
     if os.path.exists('regression_test.db'):
         os.remove('regression_test.db')

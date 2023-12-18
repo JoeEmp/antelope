@@ -1,5 +1,6 @@
 
 import os
+import shutil
 import fire
 from colorama import Fore, init
 import yaml
@@ -30,23 +31,26 @@ def update_marco(global_value_path, email_conf_path):
         f.close()
 
 
-def init_new_marco(global_value_path, email_conf_path):
+def init_new_marco(global_value_path, email_conf_path, dir_name):
     count = 0
     while True:
         if 0 == count:
+            print('是否更新下面内容到com/macro.py')
             green_print('%s' % macro_content)
-        question_str = "输入错误，请重新输入(Y/N)>" if 0 < count else "请确认宏定义内容是否正确,宏定义内容如上\n(Y/N)>"
+        question_str = "输入错误，请重新输入(Y/N)>" if 0 < count else "(Y/N)>"
         ans = input(question_str)
         if 'n' == ans.lower() or 'y' == ans.lower():
             break
         count += 1
     if 'n' == ans.lower():
         print('请手动更新 com/macro.py 文件')
+        shutil.rmtree(dir_name)
         return
     update_marco(global_value_path, email_conf_path)
 
 
 def init_dir(dir_name):
+    print('初始化用例配置')
     if os.path.exists(dir_name):
         raise UserWarning('文件(夹)%s已存在，初始化失败' % dir_name)
     os.mkdir(dir_name)
@@ -63,7 +67,7 @@ def init_project_conf(dir_name):
     init_dir(dir_name)
     init_global_value(global_value_path)
     init_email_value(email_conf_path)
-    init_new_marco(global_value_path, email_conf_path)
+    init_new_marco(global_value_path, email_conf_path, dir_name)
     init_cli(dir_name)
 
 
