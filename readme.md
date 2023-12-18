@@ -1,7 +1,6 @@
 ### 设计文档
 
-
-[加入知识库](https://www.yuque.com/g/furnace/to7lba/collaborator/join?token=z491mBSt4Iyk4fhP#),进入后见[原型和功能](https://www.yuque.com/furnace/to7lba/cmgoyr)设计文档
+[官方文档](https://github.com/JoeEmp/antelope-docs)
 
 ### 初始化环境
 
@@ -70,6 +69,7 @@ coverage html -d report/demo_html
 python3 regression_test.py
 
 ```
+
 ### 贡献者
 
 感谢协作开发者：关瑷健、邹业成、黄剑莲
